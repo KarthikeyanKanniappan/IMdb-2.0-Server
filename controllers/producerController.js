@@ -2,13 +2,14 @@ const Producer = require("../models/ProducerModel.js");
 
 const addProducer = async (req, res) => {
   try {
-    const { name, gender, biography, dateOfBirth, movies } = req.body;
+    const { name, gender, biography, dateOfBirth, movies, picture } = req.body;
     const producer = await Producer.create({
       name,
       gender,
       biography,
       dateOfBirth,
       movies,
+      picture,
     });
     res.status(200).json(producer);
   } catch (err) {

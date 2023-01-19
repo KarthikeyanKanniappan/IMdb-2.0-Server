@@ -2,13 +2,14 @@ const Actors = require("../models/ActorModel.js");
 
 const addActor = async (req, res) => {
   try {
-    const { name, gender, biography, dateOfBirth, movies } = req.body;
+    const { name, gender, biography, dateOfBirth, movies, picture } = req.body;
     const actor = await Actors.create({
       name,
       gender,
       biography,
       dateOfBirth,
       movies,
+      picture,
     });
 
     res.status(200).json(actor);

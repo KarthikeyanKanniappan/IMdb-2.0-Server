@@ -6,8 +6,10 @@ const MoviesSchema = new Schema({
   yearOfRelease: { type: String, required: true },
   plot: { type: String, required: true },
   poster: { type: String, required: true },
-  actors: [{ type: Schema.Types.ObjectId, ref: "Actors" }],
-  producer: { type: Schema.Types.ObjectId, ref: "Producer" },
+  actors: [{ type: String, ref: "Actors" }],
+  producer: { type: String, ref: "Producer" },
+  allActors: [{ type: Schema.Types.ObjectId, ref: "Actors" }],
+  allProducer: { type: Schema.Types.ObjectId, ref: "Producer" },
 });
 
 module.exports = mongoose.model("Movies", MoviesSchema);

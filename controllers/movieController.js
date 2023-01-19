@@ -4,24 +4,52 @@ const Producer = require("../models/ProducerModel.js");
 
 const addMovie = async (req, res) => {
   try {
-    const { movieName, yearOfRelease, plot, poster, actors, producer } =
-      req.body;
-    // const totalActors = await Actors.find();
-    // const totalProducer = await Producer.find();
-    // const actorId = totalActors.filter((el) => {
-    //   if (actors.toLowerCase() == el.name.toLowerCase()) {
-    //     return el._id;
-    //   }
-    // });
+    const {
+      movieName,
+      yearOfRelease,
+      plot,
+      poster,
+      actors,
+      producer,
+      allActors,
+      allProducer,
+    } = req.body;
 
-    // if(!actorId[0]){
+    const totalActors = await Actors.find();
+    const totalProducer = await Producer.find();
+    const actorsTotal = [];
+    const producerTotal = [];
+    // adding actors details
+    for (let i = 0; i < actors.length; i++) {
+      for (let j = 0; j < totalActors.length; j++) {
+        let reqActor = actors[i];
+        let dbActor = totalActors[j].name;
+        if (reqActor.toLowerCase() == dbActor.toLowerCase()) {
+          actorsTotal.push(totalActors[j]);
+        }
+      }
+    }
 
-    // }
+    // adding producer details
+    for (let j = 0; j < totalProducer.length; j++) {
+      let reqProducer = producer;
+      let dbProducer = totalProducer[j].name;
+
+      if (
+        reqProducer.split(" ").join("").toLowerCase() ==
+        dbProducer.split(" ").join("").toLowerCase()
+      ) {
+        producerTotal.push(totalProducer[j]);
+      }
+    }
+
     const movies = await Movies.create({
       movieName,
       yearOfRelease,
       plot,
       poster,
+      allActors: actorsTotal,
+      allProducer: producerTotal[0],
       actors,
       producer,
     });
@@ -69,7 +97,9 @@ const deleteMovie = async (req, res) => {
 
 const getMovie = async (req, res) => {
   try {
-    const totalMovie = await Movies.find();
+    const totalMovie = await Movies.find()
+      .populate("allActors")
+      .populate("allProducer");
     res.status(200).json(totalMovie);
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
