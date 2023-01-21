@@ -1,6 +1,7 @@
 const Movies = require("../models/MoviesModel.js");
 const Actors = require("../models/ActorModel.js");
 const Producer = require("../models/ProducerModel.js");
+const mongoose = require("mongoose");
 
 const addMovie = async (req, res) => {
   try {
@@ -65,17 +66,22 @@ const addMovie = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ message: "User doesn't exist " });
     }
-    const userMovie = await Movies.find({ _id:id });
+    const userMovie = await Movies.find({ _id :id }).populate("allActors")
+    .populate("allProducer");
+   
     res.status(200).json(userMovie);
   } catch (err) {
-    res.status(404).json({ message: "something went wrong" });
+    res.status(500).json({ message: `Something went wrong ${err}` });
   }
 };
 
 
 const updateMovie = async (req, res) => {
   const { id } = req.params;
-  const { movieName, yearOfRelease, plot, poster, actors, producer } = req.body;
+  const { movieName, yearOfRelease, plot, poster, actors, producer,  allActors
+    ,allProducer } = req.body;
+
+    console.log(req.body)
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ message: `No Movie exist with id ${id} ` });
@@ -87,7 +93,10 @@ const updateMovie = async (req, res) => {
       poster,
       actors,
       producer,
+      allActors
+    ,allProducer
     };
+
     await Movies.findByIdAndUpdate(id, updatedMovie, { new: true });
     res.json({ updatedMovie });
   } catch (err) {
