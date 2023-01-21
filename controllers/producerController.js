@@ -11,7 +11,7 @@ const addProducer = async (req, res) => {
       movies,
       picture,
     });
-    res.status(200).json(producer);
+    res.status(200).json({message:"Success"});
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
   }

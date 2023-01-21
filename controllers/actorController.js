@@ -12,7 +12,7 @@ const addActor = async (req, res) => {
       picture,
     });
 
-    res.status(200).json(actor);
+    res.status(200).json({message:"Success"});
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
   }

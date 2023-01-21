@@ -14,7 +14,6 @@ const addMovie = async (req, res) => {
       allActors,
       allProducer,
     } = req.body;
-
     const totalActors = await Actors.find();
     const totalProducer = await Producer.find();
     const actorsTotal = [];
@@ -22,7 +21,7 @@ const addMovie = async (req, res) => {
     // adding actors details
     for (let i = 0; i < actors.length; i++) {
       for (let j = 0; j < totalActors.length; j++) {
-        let reqActor = actors[i];
+        let reqActor = actors[i].name;
         let dbActor = totalActors[j].name;
         if (reqActor.toLowerCase() == dbActor.toLowerCase()) {
           actorsTotal.push(totalActors[j]);
@@ -32,7 +31,7 @@ const addMovie = async (req, res) => {
 
     // adding producer details
     for (let j = 0; j < totalProducer.length; j++) {
-      let reqProducer = producer;
+      let reqProducer = producer.name;
       let dbProducer = totalProducer[j].name;
 
       if (
@@ -54,11 +53,25 @@ const addMovie = async (req, res) => {
       producer,
     });
 
-    res.status(200).json(movies);
+    res.status(200).json({message:"success"})
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
   }
 };
+
+ const getMovieByUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "User doesn't exist " });
+    }
+    const userMovie = await Movies.find({ _id:id });
+    res.status(200).json(userMovie);
+  } catch (err) {
+    res.status(404).json({ message: "something went wrong" });
+  }
+};
+
 
 const updateMovie = async (req, res) => {
   const { id } = req.params;
@@ -106,4 +119,4 @@ const getMovie = async (req, res) => {
   }
 };
 
-module.exports = { addMovie, updateMovie, deleteMovie, getMovie };
+module.exports = { addMovie, updateMovie, deleteMovie, getMovie ,getMovieByUser };
